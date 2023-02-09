@@ -1,0 +1,94 @@
+{
+    "2023-02-12": {
+        "latest_cointegrated_pairs": [
+            {
+                "uid": "EURUSDXAGUSD",
+                "sym_0": "EURUSD",
+                "sym_1": "XAGUSD",
+                "zero_crossings": 1,
+                "max_z_score": 3.758,
+                "avg_z_score": 1.047,
+                "mode_z_score": 0.275,
+                "latest_zscore": -0.116,
+                "rsi_EURUSD": 23.59361880772326,
+                "rsi_XAGUSD": 38.8581952117864
+            },
+            {
+                "uid": "NZDUSDXAGUSD",
+                "sym_0": "NZDUSD",
+                "sym_1": "XAGUSD",
+                "zero_crossings": 3,
+                "max_z_score": 2.877,
+                "avg_z_score": 1.047,
+                "mode_z_score": 0.521,
+                "latest_zscore": 0.218,
+                "rsi_NZDUSD": 36.64036076662909,
+                "rsi_XAGUSD": 38.8581952117864
+            },
+            {
+                "uid": "ADAUSDBTCUSD",
+                "sym_0": "ADAUSD",
+                "sym_1": "BTCUSD",
+                "zero_crossings": 11,
+                "max_z_score": 3.358,
+                "avg_z_score": 1.044,
+                "mode_z_score": 1.059,
+                "latest_zscore": 1.0,
+                "rsi_ADAUSD": 60.769230769230944,
+                "rsi_BTCUSD": 64.83103879849813
+            },
+            {
+                "uid": "AUDUSDXAUUSD",
+                "sym_0": "AUDUSD",
+                "sym_1": "XAUUSD",
+                "zero_crossings": 17,
+                "max_z_score": 3.436,
+                "avg_z_score": 1.019,
+                "mode_z_score": 0.248,
+                "latest_zscore": -1.487,
+                "rsi_AUDUSD": 38.647830474268524,
+                "rsi_XAUUSD": 47.54398826979443
+            },
+            {
+                "uid": "EURUSDXAUUSD",
+                "sym_0": "EURUSD",
+                "sym_1": "XAUUSD",
+                "zero_crossings": 21,
+                "max_z_score": 2.739,
+                "avg_z_score": 1.055,
+                "mode_z_score": 1.044,
+                "latest_zscore": -1.201,
+                "rsi_EURUSD": 23.59361880772326,
+                "rsi_XAUUSD": 47.54398826979443
+            },
+            {
+                "uid": "NZDUSDXAUUSD",
+                "sym_0": "NZDUSD",
+                "sym_1": "XAUUSD",
+                "zero_crossings": 22,
+                "max_z_score": 2.907,
+                "avg_z_score": 0.993,
+                "mode_z_score": 0.329,
+                "latest_zscore": -1.583,
+                "rsi_NZDUSD": 36.64036076662909,
+                "rsi_XAUUSD": 47.54398826979443
+            },
+            {
+                "uid": "DOTUSDETHUSD",
+                "sym_0": "DOTUSD",
+                "sym_1": "ETHUSD",
+                "zero_crossings": 24,
+                "max_z_score": 3.719,
+                "avg_z_score": 1.098,
+                "mode_z_score": 1.22,
+                "latest_zscore": 1.458,
+                "rsi_DOTUSD": 66.35514018691578,
+                "rsi_ETHUSD": 52.362804878048934
+            }
+        ],
+        "has_reached_target": false,
+        "balance": 200000.0,
+        "last_scan_time": "2023-02-12 16:47:45.091206+01:00",
+        "total_risk": 0
+    }
+}

@@ -1,69 +1,41 @@
 import risk_management.config as risk_config
 import MetaTrader5 as mt5
-import json
 
-def close_orders(symbol, pair_id):
-    current_date = risk_config.current_date
-    trading_record = risk_config.trading_record
+def close_order(position):
+    symbol = position.symbol
+    volume = position.volume
+    type = 1 if position.type == 0 else 0
+    price = mt5.symbol_info_tick(symbol).bid if type == 1 else mt5.symbol_info_tick(symbol).ask
+    position_id = position.identifier
 
-    pair_orders = trading_record[current_date]["orders"][pair_id]
-
-    successful_closes = []
-
-    pair_risk = 0
-
-    for order in pair_orders:
-        symbol = order["symbol"]
-        volume = order["lot"]
-        type = mt5.ORDER_TYPE_SELL if order["direction"] == "buy" else mt5.ORDER_TYPE_BUY
-        position_id = order["order_id"]
-        deviation = 20
-        price = mt5.symbol_info_tick(symbol).bid if order["direction"] == "buy" else mt5.symbol_info_tick(symbol).ask
-        pair_risk += order["order_risk"]
-
-        request={
-         "action": mt5.TRADE_ACTION_DEAL,
+    request={
+        "action": mt5.TRADE_ACTION_DEAL,
         "symbol": symbol,
         "volume": volume,
         "type": type,
         "position": position_id,
         "price": price,
-        "deviation": deviation,
+        "deviation": 20,
         "magic": 234000,
         "comment": "python script close",
         "type_time": mt5.ORDER_TIME_GTC,
-        "type_filling": mt5.ORDER_FILLING_RETURN,}
+        "type_filling": mt5.ORDER_FILLING_IOC,}
 
-        # send a trading request
-        result=mt5.order_send(request)
+    # send a trading request
+    result=mt5.order_send(request)
 
-        if result.retcode == 10009:
-            successful_closes.append(True)
+    if result.retcode == 10009:
+        print(f"position { position_id } for { symbol } closed successfully!")
+    else:
+        print(f"position { position_id } for { symbol } failed to close!")
+        print(result)
+        
+def close_all_positions():
+    print("Closing all positions")
 
-    save_risk_state(pair_risk, pair_id)
+    positions=mt5.positions_get()
 
+    if len(positions) > 0:
+        for position in positions:
+            close_order(position)
 
-def save_risk_state(pair_risk, pair_id):
-    current_date = risk_config.current_date
-    trading_record = risk_config.trading_record
-
-    tradeable_capital = trading_record[current_date]["tradeable_capital"]
-    new_tradeable_capital = tradeable_capital + pair_risk
-
-    trading_record[current_date]["tradeable_capital"] = new_tradeable_capital
- 
-    if pair_id in trading_record[current_date]["orders"].keys():
-        del trading_record[current_date]["orders"][pair_id]
-    
-    total_risk = trading_record[current_date]["total_risk"]
-
-    new_total_risk = total_risk - pair_risk
-
-    trading_record[current_date]["total_risk"] = new_total_risk
-
-    # save state
-    risk_config.trading_record = trading_record
-
-    # persist state
-    with open("trading_day_record.json", "w") as outfile:
-        json.dump(trading_record, outfile, indent=4)
