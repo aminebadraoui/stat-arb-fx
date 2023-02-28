@@ -15,7 +15,12 @@ from datetime import datetime, timedelta
 
 def update_cointegrated_pairs():
     # *UK100*, *GER40*, *US100*, *US500*, *US30*, *AMZN*, *BABA*, *BAC*, *FB*, *GOOG*, *MSFT*, *NFLX*, *AAPL*, *NVDA*, *META*, *PFE*, *RACE*, *WMT*, 
-    symbols = mt5.symbols_get(group="*USD,!*DOT*, !*ETH*, !*BTC*, !*NEO*, !*DASH*, !*DOGE*, !*ADA*,!*LTC*,!*XRP*,!*XMR* ")
+    currency_group = "*GBPUSD*, *USDCHF*, *USDJPY*, *USDCAD*, *AUDUSD*, *AUDNZD*, *AUDCAD*, *AUDCHF*, *AUDJPY*, *CHFJPY*, *EURGBP*, *EURAUD*, *EURJPY*, *NZDUSD*, *EURNZD*, *EURCAD*, *GBPCHF*, *GBPJPY*, *CADCHF*, *CADJPY*, *GBPAUD*, *GBPCAD*, *GBPNZD*, *NZDCAD*, *NZDCHF*, *NZDJPY* "
+    commodities_group = "*XAGEUR*, *XAGUSD*, *XAUAUD*, *XAGAUD*, *XAUEUR*, *XPTUSD*, *XAUUSD*, *XPDUSD*"
+    indices_group = "*UK100.cash*, *GER40.cash*, *US100.cash*, *US500.cash*, *US30.cash*"
+    symbols = mt5.symbols_get(group=",".join([currency_group, commodities_group, indices_group]))
+    # for symbol in symbols:
+    #     print(symbol.name)
     return get_cointegrated_tickers(symbols)
 
 if __name__ == "__main__":

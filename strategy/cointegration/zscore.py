@@ -15,7 +15,7 @@ def get_zscores(spread):
     mean = df.rolling(window=z_score_window).mean()
     std = df.rolling(window=z_score_window).std()
 
-    df["Z-Score"] = round((x-mean)/std, 3)
+    df["Z-Score"] = round((x-mean)/std, 1)
 
     z_score_list = df["Z-Score"].dropna().astype(float).values
     
@@ -26,7 +26,7 @@ def get_zscores(spread):
     
     if len(abs_zscore_list) > 0:  
         max_z_score = max(abs_zscore_list)
-        avg_z_score = round(sum(abs_zscore_list)/len(abs_zscore_list),3)
+        avg_z_score = round(sum(abs_zscore_list)/len(abs_zscore_list),1)
         mode_zscore = mode(abs_zscore_list)
         latest_zscore = z_score_list[-1]
 

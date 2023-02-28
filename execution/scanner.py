@@ -18,22 +18,19 @@ def scan(latest_cointegrated_pairs):
         
         latest_zscore, max_zscore, avg_zscore, mode_zscore = get_latest_zscore(sym_0, sym_1)
         signal = perform_signal_check(latest_zscore, max_zscore, avg_zscore, mode_zscore)
-        print(f"Current RSI for {sym_0} for pair is {get_latest_rsi(sym_0)}")
-        print(f"Current RSI for {sym_1} for pair is {get_latest_rsi(sym_1)}")
        
         if signal == Signal.TRADE:
             if latest_zscore < 0:
-                    print(f"Z-score crossed threshold. Open Trade. buy {sym_0}, sell {sym_1}")
+                if get_latest_rsi(sym_0) < 25 and get_latest_rsi(sym_1) > 75:
                     place_order(buy_symbol=sym_0, sell_symbol=sym_1)
             else:
-                    # sell first symbol
-                    print(f"Z-score crossed threshold. Open Trade. buy {sym_1}, sell {sym_0}")
+                if get_latest_rsi(sym_1) < 25 and get_latest_rsi(sym_0) > 75:
                     place_order(buy_symbol=sym_1, sell_symbol=sym_0)
        
         if signal == Signal.WAIT:
-            print(f"Waiting for Z-score  to cross threshold.")
+            print(f"Waiting for signal...")
         if signal == Signal.CLOSE:
-            print(f"Z-score is zero")
+            print(f"Waiting for signal...")
         
         # RSI check
         # positions_0 = mt5.positions_get(symbol=sym_0)

@@ -7,12 +7,12 @@ class Signal(Enum):
     CLOSE = 2
 
 def perform_signal_check(z_score, max_zscore, avg_zscore, mode_zscore):
-    z_score_thresh = 2
-    print(f"Z-score thresh for pair is {z_score_thresh}")
+    z_score_thresh = round(0.8*max_zscore,1)
+    # print(f"Z-score thresh for pair is {z_score_thresh}")
     # print(f"Avg Z-score for pair is {avg_zscore}")
     # print(f"Most common Z-score for pair is {mode_zscore}")
     # print(f"Max Z-score for pair is {max_zscore}")
-    print(f"Current Z-score for pair is {z_score}")
+    # print(f"Current Z-score for pair is {z_score}")
     
     
     if z_score == None:
