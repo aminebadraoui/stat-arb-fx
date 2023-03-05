@@ -5,6 +5,7 @@ from execution.check_signal import Signal
 from execution.close_orders import close_order
 from execution.check_latest_rsi import get_latest_rsi
 import MetaTrader5 as mt5
+from copula.copula_analysis import perform_copula_analysis
 
 
 def scan(latest_cointegrated_pairs):
@@ -16,21 +17,15 @@ def scan(latest_cointegrated_pairs):
         print("**********")
         print(f"{sym_0} / {sym_1} ")
         
-        latest_zscore, max_zscore, avg_zscore, mode_zscore = get_latest_zscore(sym_0, sym_1)
-        signal = perform_signal_check(latest_zscore, max_zscore, avg_zscore, mode_zscore)
-       
-        if signal == Signal.TRADE:
-            if latest_zscore < 0:
-                if get_latest_rsi(sym_0) < 25 and get_latest_rsi(sym_1) > 75:
-                    place_order(buy_symbol=sym_0, sell_symbol=sym_1)
-            else:
-                if get_latest_rsi(sym_1) < 25 and get_latest_rsi(sym_0) > 75:
-                    place_order(buy_symbol=sym_1, sell_symbol=sym_0)
-       
-        if signal == Signal.WAIT:
-            print(f"Waiting for signal...")
-        if signal == Signal.CLOSE:
-            print(f"Waiting for signal...")
+        signal = perform_copula_analysis(sym_0=sym_0, sym_1=sym_1)
+        
+        if signal == Signal.TRADE_LONG:
+            place_order(buy_symbol=sym_0, sell_symbol=sym_1)
+        elif signal == Signal.TRADE_SHORT:
+            place_order(buy_symbol=sym_1, sell_symbol=sym_0)
+            
+            
+        
         
         # RSI check
         # positions_0 = mt5.positions_get(symbol=sym_0)

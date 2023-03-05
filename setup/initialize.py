@@ -11,10 +11,15 @@ def initialize():
     else:
         print("MT5 Initialized")
         
+    # # Ask for credentials
+    # account = input("Enter account number:")
+    # password = input("Enter account password:")
+    # server = input("Enter server:")
+    
     # Ask for credentials
-    account = input("Enter account number:")
-    password = input("Enter account password:")
-    server = input("Enter server:")
+    account = 1051502470
+    password = "S28TTTPU4M"
+    server = "FTMO-Demo"
  
     # now connect to another trading account specifying the password
     authorized = mt5.login(int(account),

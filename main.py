@@ -65,56 +65,11 @@ if __name__ == "__main__":
                     trading_record_dict[current_trading_day_str]["has_reached_target"] = has_reached_target
                     
                     print("All positions closed.")
-                        
-        # By this point we should be all set with a list of cointegrated pairs
-        # We scan to potentially place more positions every n minutes
-        # if "last_scan_time" in trading_record_dict[current_trading_day_str].keys():
-        #     last_scan_time_json = trading_record_dict[current_trading_day_str]["last_scan_time"]
-            
-        #     last_scan_time = datetime.strptime(last_scan_time_json, '%Y-%m-%d %H:%M:%S.%f%z')
-
-        #     if datetime.now(tz) < last_scan_time + timedelta(seconds=1):
-        #         allow_scan = False
-        #     else:
-        #         allow_scan = True
-        # else:
-        #     trading_record_dict[current_trading_day_str]["last_scan_time"] = f"{datetime.now(tz)}"
-         
+ 
         # if not(has_reached_target):
         scan(latest_cointegrated_pairs)
         trading_record_dict[current_trading_day_str]["last_scan_time"] = f"{datetime.now(tz)}"
-        
-        # trailing stop loss
-        # if len(mt5.positions_get()) > 0:
-        #     for position in mt5.positions_get():
-        #         symbol = position.symbol
-        #         price_open = position.price_open
-        #         price_curr = position.price_current
-        #         sl_curr = position.sl
-                
-        #         trade_type = "buy" if position.type == 0 else "sell"
-        #         new_sl = price_curr + compute_sl(symbol, trade_type) if trade_type == "sell" else price_curr - compute_sl(symbol, trade_type) 
-                
-        #         request = {
-        #             "action": mt5.TRADE_ACTION_SLTP,
-        #             "symbol": symbol,
-        #             "sl": new_sl,
-        #             "tp": position.tp,
-        #             "position": position.identifier}
-                
-        #         if trade_type == "sell" and position.profit > 50:
-        #             if new_sl < sl_curr:
-        #                 res = mt5.order_send(request)
                         
-        #                 if res[0] == 10009:
-        #                     print(f"SL for { symbol } modified successfully at {new_sl}")
-        #         elif trade_type == "buy" and position.profit > 50:
-        #             if new_sl > sl_curr:
-        #                 res = mt5.order_send(request)
-                        
-        #                 if res[0] == 10009:
-        #                     print(f"SL for { symbol } modified successfully at {new_sl}")
-                          
         # Record Risk
         trading_record_dict[current_trading_day_str]["total_risk"] = risk_conf.get_current_total_risk()
         

@@ -11,13 +11,18 @@ def place_order(buy_symbol, sell_symbol):
     selected=mt5.symbol_select(buy_symbol,True)
     if not selected:
         print(f"Failed to select {buy_symbol}")
-
+    
+   
+    
+    latest_rsi_buy = get_latest_rsi(buy_symbol)
     positions = mt5.positions_get(symbol=buy_symbol)
-    if positions == ():
+    if positions == () and get_latest_rsi(buy_symbol) < 25:
+        print(f"No position for { buy_symbol }, adding new position")
         place_buy_order(buy_symbol)
     else:
         for position in positions:
-            if position.type == 0:
+            if position.type == 0 and get_latest_rsi(buy_symbol) < 25 :
+                print(f"position for { buy_symbol } profitable and rsi {latest_rsi_buy} is oversold, adding new position")
                 place_buy_order(buy_symbol)
                                                     
     # sell second symbol
@@ -27,12 +32,16 @@ def place_order(buy_symbol, sell_symbol):
         print(f"Failed to select {sell_symbol}")
         
     positions = mt5.positions_get(symbol=sell_symbol)
-                        
-    if positions == ():
+    
+    latest_rsi_sell = get_latest_rsi(sell_symbol)
+                            
+    if positions == () and get_latest_rsi(sell_symbol) > 75:
+        print(f"No position for { sell_symbol }")
         place_sell_order(sell_symbol)
     else:
         for position in positions:
-            if position.type == 1:
+            if position.type == 1 and get_latest_rsi(sell_symbol) > 75:
+                print(f"position for { sell_symbol } profitable and latest rsi {latest_rsi_sell} is overbought , adding new position")
                 place_sell_order(sell_symbol)
                                             
 def get_rounding(value):
@@ -87,6 +96,12 @@ def place_buy_order(ticker_symbol):
     sl_pips = abs(entry_price-sl)/tick_size
     tp_pips = abs(entry_price-tp)/tick_size
     
+    print(f"entry_price {entry_price}")
+    print(f"sl {sl}")
+    print(f"abs diff price-sl {abs(entry_price-sl)}")
+    print(f"rr*diff {risk_config.rr_ratio*abs(entry_price-sl)}")
+    print(f"tp {entry_price + (risk_config.rr_ratio*abs(entry_price-sl))}")
+    
     if not(sl_pips > 0) or not(tick_value > 0):
         return 
     
@@ -95,6 +110,13 @@ def place_buy_order(ticker_symbol):
     
     risk = round(sl_pips * tick_value * position_size, price_rounding_value)
     potential_profit = round(tp_pips * tick_value * position_size, price_rounding_value)
+
+    print(f"place buy order for {ticker_symbol} at {entry_price} with sl at {sl} (sl delta pips: {sl_pips})")
+
+    print(f"trade capital before trade is {trade_capital}")
+    print(f"position_size is {position_size}")
+    print(f"risk is {risk}")
+    print(f"potential profit is {potential_profit}")
 
     deviation = 20
     request = {
@@ -116,6 +138,7 @@ def place_buy_order(ticker_symbol):
     spread_pips = spread/tick_size
     spread_value = spread_pips*tick_value*position_size
     
+    print(f"Spread value is: { spread_value } ")
     # send a trading request
     if spread_value < 20:
         result = mt5.order_send(request)
@@ -154,6 +177,12 @@ def place_sell_order(ticker_symbol):
     
     tp = round(entry_price - ( risk_config.rr_ratio*abs(entry_price-sl) ), price_rounding_value)
     
+    print(f"entry_price {entry_price}")
+    print(f"sl {sl}")
+    print(f"abs diff price-sl {abs(entry_price-sl)}")
+    print(f"rr*diff {risk_config.rr_ratio*abs(entry_price-sl)}")
+    print(f"tp {entry_price - (risk_config.rr_ratio*abs(entry_price-sl))}")
+    
     sl_pips = abs(entry_price-sl)/tick_size
     tp_pips = abs(entry_price-tp)/tick_size
     
@@ -165,6 +194,13 @@ def place_sell_order(ticker_symbol):
     
     risk = round(sl_pips * tick_value * position_size, price_rounding_value)
     potential_profit = round(tp_pips * tick_value * position_size, price_rounding_value)
+    
+    print(f"place sell order for {ticker_symbol} at {entry_price} with sl at {sl} (sl delta pips: {sl_pips})")
+
+    print(f"trade capital before trade is {trade_capital}")
+    print(f"position_size is {position_size}")
+    print(f"risk is {risk}")
+    print(f"potential profit is {potential_profit}")
 
     deviation = 20
     request = {
@@ -185,6 +221,8 @@ def place_sell_order(ticker_symbol):
     spread = abs(entry_price - mt5.symbol_info(ticker_symbol).ask)
     spread_pips = spread/tick_size
     spread_value = spread_pips*tick_value*position_size
+    
+    print(f"Spread value is: { spread_value } ")
     
     # send a trading request
     if spread_value < 20:

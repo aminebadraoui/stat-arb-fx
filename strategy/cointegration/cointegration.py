@@ -23,7 +23,7 @@ def check_cointegration(close_series_0, close_series_1):
     p_value = coint_res[1]
     c_value = coint_res[2][1]
 
-    if p_value < 0.01 and t_value < c_value:
+    if p_value < 0.005 and t_value < c_value:
         is_cointegrated = True
 
     return is_cointegrated
@@ -64,7 +64,6 @@ def setup_cointegrated_pair(sym_0, sym_1, close_prices_0, close_prices_1):
             "max_z_score": max_zscore,
             "avg_z_score": avg_zscore,
             "mode_z_score": mode_zscore,
-            "threshold": round(0.8*max_zscore,1),
             "latest_zscore": latest_zscore,
             f"rsi_{sym_0}": latest_rsi_0,
             f"rsi_{sym_1}": latest_rsi_1,
@@ -107,8 +106,7 @@ def get_cointegrated_tickers(symbols):
             if is_pair_cointegrated:
                 pair = setup_cointegrated_pair(sym_0, sym_1, close_prices_0, close_prices_1)
                 
-                if pair["zero_crossings"] > 20:
-                    cointegrated_pairs.append(pair)
+                cointegrated_pairs.append(pair)
 
     #sort the cointegrated pairs by zero crossings
     sorted_cointegrated_pairs = sorted(cointegrated_pairs, key=lambda i: i['zero_crossings'])
